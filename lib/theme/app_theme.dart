@@ -19,7 +19,6 @@ class AppTheme {
         primary: primaryColor,
         secondary: accentColor,
         surface: cardColor,
-        background: backgroundColor,
         error: dangerColor,
         brightness: Brightness.light,
       ),
@@ -40,7 +39,7 @@ class AppTheme {
         bodyMedium: GoogleFonts.outfit(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: textColor.withOpacity(0.8),
+          color: textColor.withValues(alpha: 0.8),
           height: 1.5,
         ),
         bodySmall: GoogleFonts.outfit(
@@ -75,7 +74,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: BorderSide(color: Colors.grey.withOpacity(0.1), width: 1),
+          side: BorderSide(color: Colors.grey.withValues(alpha: 0.1), width: 1),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -85,7 +84,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        hintStyle: GoogleFonts.outfit(color: subtitleColor.withOpacity(0.5)),
+        hintStyle: GoogleFonts.outfit(color: subtitleColor.withValues(alpha: 0.5)),
       ),
     );
   }
@@ -101,7 +100,6 @@ class AppTheme {
         primary: primaryColor,
         secondary: accentColor,
         surface: darkCard,
-        background: darkBg,
         brightness: Brightness.dark,
       ),
       scaffoldBackgroundColor: darkBg,
@@ -120,7 +118,7 @@ class AppTheme {
         bodyMedium: GoogleFonts.outfit(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: Colors.white.withOpacity(0.8),
+          color: Colors.white.withValues(alpha: 0.8),
           height: 1.5,
         ),
         bodySmall: GoogleFonts.outfit(
@@ -143,7 +141,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: BorderSide(color: Colors.white.withOpacity(0.05), width: 1),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.05), width: 1),
         ),
       ),
     );
