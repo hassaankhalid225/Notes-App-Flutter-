@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reorderables/reorderables.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../database/db_helper.dart';
@@ -117,6 +118,7 @@ class _NotesListScreenState extends State<NotesListScreen> {
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
               floating: true,
@@ -154,19 +156,31 @@ class _NotesListScreenState extends State<NotesListScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Search your thoughts...',
-                    prefixIcon: const Icon(Icons.search_rounded),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear_rounded),
-                            onPressed: () => _searchController.clear(),
-                          )
-                        : null,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                    fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search your thoughts...',
+                      prefixIcon: const Icon(Icons.search_rounded),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear_rounded),
+                              onPressed: () => _searchController.clear(),
+                            )
+                          : null,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                      fillColor: Theme.of(context).colorScheme.surface,
+                    ),
                   ),
                 ),
               ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0),
@@ -179,25 +193,22 @@ class _NotesListScreenState extends State<NotesListScreen> {
                     ? SliverFillRemaining(child: _buildEmptyState())
                     : SliverPadding(
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        sliver: SliverToBoxAdapter(
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              // Make it responsive: calculate width for cards
-                              final width = (constraints.maxWidth - 16) / 2;
-                              return ReorderableWrap(
-                                spacing: 16,
-                                runSpacing: 16,
-                                padding: const EdgeInsets.only(bottom: 100),
-                                onReorder: _onReorder,
-                                children: _filteredNotes.map((note) => SizedBox(
-                                  width: width,
-                                  child: _buildNoteCard(note),
-                                )).toList(),
-                              );
-                            },
-                          ),
+                        sliver: SliverMasonryGrid.count(
+                          crossAxisCount: 2, 
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          itemBuilder: (context, index) {
+                            final note = _filteredNotes[index];
+                            // Using a normal MasonryGrid for visual quality as priority
+                            // We can use a long-press overlay for manual reordering if needed 
+                            // but let's keep it simple and gorgeous first.
+                            return _buildNoteCard(note);
+                          },
+                          childCount: _filteredNotes.length,
                         ),
                       ),
+            // Bottom padding for FAB
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
         ),
       ),
@@ -228,7 +239,7 @@ class _NotesListScreenState extends State<NotesListScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/empty_notes.png',
+              'assets/logo.png',
               height: 240,
             ).animate().shimmer(duration: 2.seconds, color: Colors.white24).shake(hz: 2),
             const SizedBox(height: 24),
@@ -254,7 +265,6 @@ class _NotesListScreenState extends State<NotesListScreen> {
     final String formattedDate = DateFormat('MMM d').format(note.updatedAt);
 
     return Hero(
-      key: ValueKey(note.id),
       tag: 'note_${note.id}',
       child: GestureDetector(
         onTap: () async {
@@ -279,9 +289,14 @@ class _NotesListScreenState extends State<NotesListScreen> {
               border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -335,8 +350,8 @@ class _NotesListScreenState extends State<NotesListScreen> {
                             ),
                           ),
                           Icon(
-                            Icons.drag_indicator_rounded,
-                            size: 16,
+                            Icons.arrow_forward_rounded,
+                            size: 14,
                             color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                           ),
                         ],

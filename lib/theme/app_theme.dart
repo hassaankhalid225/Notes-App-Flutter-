@@ -74,7 +74,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: BorderSide(color: Colors.grey.withValues(alpha: 0.1), width: 1),
+          side: BorderSide(color: Colors.grey.withValues(alpha: 0.15), width: 1.5),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -141,7 +141,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: BorderSide(color: Colors.white.withValues(alpha: 0.05), width: 1),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.12), width: 1.5),
         ),
       ),
     );
